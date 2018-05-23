@@ -1,0 +1,9 @@
+main: ca.koda3.spigot.checkpoints.Main
+name: koda3_CHKPNT
+version: 1.0 BETA 1
+authors: [koda3]
+description: チェックポイントプラグイン
+commands:
+   chkpnt:
+      description: チェックポイントを作成
+      usage: /chkpnt
