@@ -37,7 +37,6 @@ public class Main extends JavaPlugin implements Listener {
     public void onRightClickMagmaCream(PlayerInteractEvent event) { // MagmaCreamを持ちながら右クリックときに
         if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 && isWarpCream(event.getPlayer().getInventory().getItemInMainHand())) {
-            this.getServer().getLogger().info("RC MagmaCream");
             ItemStack warpCream = event.getPlayer().getInventory().getItemInMainHand();
             ItemMeta im = warpCream.getItemMeta();
             String world = im.getLore().get(0).replace("ワールド：", "");
@@ -74,9 +73,8 @@ public class Main extends JavaPlugin implements Listener {
                 player = (Player) sender;
             }
             else if(args.length == 1) {
-                logger.info(""+sender.getName());
                 if (!(sender instanceof BlockCommandSender)) {
-                    sender.sendMessage(ChatColor.RED + "［エラー］：このコマンドはコンソールやコマンドブロックにしか使用できません");
+                    sender.sendMessage(ChatColor.RED + "［エラー］：このコマンドはコマンドブロックにしか使用できません");
                     return true;
                 }
                 player = getServer().getPlayer(args[0]);
