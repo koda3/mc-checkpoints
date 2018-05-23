@@ -3,8 +3,10 @@ package ca.koda3.spigot.checkpoints;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -63,13 +65,30 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equals("chkpnt")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "［エラー］：このコマンドはプレイヤーにしか使用できません");
+            Player player = null;
+            if (args.length == 0) {
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.RED + "［エラー］：このコマンドはプレイヤーにしか使用できません");
+                    return true;
+                }
+                player = (Player) sender;
+            }
+            else if(args.length == 1) {
+                logger.info(""+sender.getName());
+                if (!(sender instanceof BlockCommandSender)) {
+                    sender.sendMessage(ChatColor.RED + "［エラー］：このコマンドはコンソールやコマンドブロックにしか使用できません");
+                    return true;
+                }
+                player = getServer().getPlayer(args[0]);
+            }
+            if (player != null) {
+                String message = setCheckpoint(player);
+                sender.sendMessage(message);
+                if (!sender.equals(player)) {
+                    player.sendMessage(message);
+                }
                 return true;
             }
-            String message = setCheckpoint((Player) sender);
-            sender.sendMessage(message);
-            return true;
         }
         return false;
     }
