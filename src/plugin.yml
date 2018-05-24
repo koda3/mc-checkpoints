@@ -1,5 +1,5 @@
 main: ca.koda3.spigot.checkpoints.Main
-name: koda3_CHKPNT
+name: SyunServer_Checkpoint
 version: 1.0 BETA 1
 authors: [koda3]
 description: チェックポイントプラグイン
