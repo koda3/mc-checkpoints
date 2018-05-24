@@ -51,8 +51,6 @@ public class Main extends JavaPlugin implements Listener {
                         Float.parseFloat(angle[0]),
                         Float.parseFloat(angle[1])
                 );
-                warpCream.setAmount(warpCream.getAmount() - 1);
-                event.getPlayer().getInventory().setItemInMainHand(warpCream);
                 event.getPlayer().teleport(loc);
                 event.getPlayer().sendMessage(ChatColor.GREEN + "［成功］ ワープされました");
             } catch (Exception e) {
@@ -65,14 +63,7 @@ public class Main extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equals("chkpnt")) {
             Player player = null;
-            if (args.length == 0) {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.RED + "［エラー］：このコマンドはプレイヤーにしか使用できません");
-                    return true;
-                }
-                player = (Player) sender;
-            }
-            else if(args.length == 1) {
+            if(args.length == 1) {
                 if (!(sender instanceof BlockCommandSender)) {
                     sender.sendMessage(ChatColor.RED + "［エラー］：このコマンドはコマンドブロックにしか使用できません");
                     return true;
@@ -101,12 +92,25 @@ public class Main extends JavaPlugin implements Listener {
         for (ItemStack is : player.getInventory().getContents()) {
             if (is != null
                     && is.getType() == Material.MAGMA_CREAM
-                    && !isWarpCream(is)) {
+                    && isWarpCream(is)) {
                 magmaCream = is;
                 break;
             }
             slot++;
         }
+
+        if (magmaCream == null) {
+            slot = 0;
+            for (ItemStack is : player.getInventory().getContents()) {
+                if (is != null
+                        && is.getType() == Material.MAGMA_CREAM) {
+                    magmaCream = is;
+                    break;
+                }
+                slot++;
+            }
+        }
+
         if (magmaCream == null) {
             return ChatColor.RED + "［失敗］ MagmaCreamを持ってコマンドを再送信してください";
         }
