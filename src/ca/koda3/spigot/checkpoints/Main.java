@@ -19,12 +19,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-public class Main extends JavaPlugin implements Listener {
+public class Main extends JavaPlugin {
     private static Logger logger;
 
     public void onEnable() {
         this.logger = this.getLogger();
-        this.getServer().getPluginManager().registerEvents(this, this);
+        this.getServer().getPluginManager().registerEvents(new EventHandlers(this), this);
         this.getServer().getLogger().info("チェックポイントプラグインロードしました");
         this.getCommand("chkpnt").setExecutor(this);
     }
@@ -33,31 +33,7 @@ public class Main extends JavaPlugin implements Listener {
 
     }
 
-    @EventHandler
-    public void onRightClickMagmaCream(PlayerInteractEvent event) { // MagmaCreamを持ちながら右クリックときに
-        if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-                && isWarpCream(event.getPlayer().getInventory().getItemInMainHand())) {
-            ItemStack warpCream = event.getPlayer().getInventory().getItemInMainHand();
-            ItemMeta im = warpCream.getItemMeta();
-            String world = im.getLore().get(0).replace("ワールド：", "");
-            String[] coords = im.getLore().get(1).replace("座標：", "").split(",");
-            String[] angle = im.getLore().get(2).replace("角度：", "").split(",");
-            try {
-                Location loc = new Location(
-                        getServer().getWorld(world),
-                        Double.parseDouble(coords[0]),
-                        Double.parseDouble(coords[1]),
-                        Double.parseDouble(coords[2]),
-                        Float.parseFloat(angle[0]),
-                        Float.parseFloat(angle[1])
-                );
-                event.getPlayer().teleport(loc);
-                event.getPlayer().sendMessage(ChatColor.GREEN + "［成功］ ワープされました");
-            } catch (Exception e) {
-                // アイテムが偽物なの可能性高い
-            }
-        }
-    }
+
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -134,7 +110,7 @@ public class Main extends JavaPlugin implements Listener {
         return ChatColor.GREEN + "［成功］ チェックポイント作成しました";
     }
 
-    private static boolean isWarpCream(ItemStack is) {
+    public static boolean isWarpCream(ItemStack is) {
         if ((is == null)
                 || (is.getType() != Material.MAGMA_CREAM)
                 || (!is.hasItemMeta())
